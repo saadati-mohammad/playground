@@ -1,1 +1,46 @@
-<p>product works!</p>
+<div class="container">
+      <h1>مدیریت محصولات با NgRx</h1>
+
+      <!-- وضعیت Loading -->
+      <div *ngIf="loading$ | async" class="loading">
+        ⏳ در حال بارگذاری...
+      </div>
+
+      <!-- نمایش خطا -->
+      <div *ngIf="error$ | async as error" class="error">
+        ❌ خطا: {{ error }}
+      </div>
+
+      <!-- دکمه‌های عملیات -->
+      <div class="actions">
+        <button (click)="loadProducts()">🔄 بارگذاری محصولات</button>
+        <button (click)="addNewProduct()">➕ اضافه کردن محصول</button>
+      </div>
+
+      <!-- لیست محصولات -->
+      <div class="products">
+        <h2>لیست محصولات ({{ (products$ | async)?.length || 0 }})</h2>
+        <div *ngFor="let product of products$ | async" 
+             class="product-card"
+             [class.selected]="product.id === (selectedProductId$ | async)">
+          
+          <h3>{{ product.name }}</h3>
+          <p>قیمت: {{ product.price | number }} تومان</p>
+          <p>{{ product.description }}</p>
+          <p>موجودی: {{ product.inStock ? '✅ موجود' : '❌ ناموجود' }}</p>
+
+          <div class="card-actions">
+            <button (click)="selectProduct(product.id)">👁️ انتخاب</button>
+            <button (click)="editProduct(product)">✏️ ویرایش</button>
+            <button (click)="removeProduct(product.id)">🗑️ حذف</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- محصول انتخاب شده -->
+      <div *ngIf="selectedProduct$ | async as selected" class="selected-product">
+        <h2>محصول انتخاب شده:</h2>
+        <pre>{{ selected | json }}</pre>
+        <button (click)="clearSelection()">❌ پاک کردن انتخاب</button>
+      </div>
+    </div>
